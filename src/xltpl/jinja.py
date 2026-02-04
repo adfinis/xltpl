@@ -1,7 +1,7 @@
 import re
 import sys
 
-from jinja2 import Environment
+from jinja2.sandbox import SandboxedEnvironment as Environment
 from jinja2.exceptions import TemplateSyntaxError
 
 from .xlext import (
