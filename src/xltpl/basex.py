@@ -52,7 +52,14 @@ class SheetBase:
         self.wtcols.add(wtcolx)
 
     def _cell(
-        self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None,
+        self,
+        source_cell,
+        rdrowx,
+        rdcolx,
+        wtrowx,
+        wtcolx,
+        value=None,
+        data_type=None,
     ):
         target_cell = self.wtsheet.cell(column=wtcolx, row=wtrowx)
         if value is None:
@@ -76,7 +83,14 @@ class SheetBase:
         return target_cell
 
     def cell(
-        self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None,
+        self,
+        source_cell,
+        rdrowx,
+        rdcolx,
+        wtrowx,
+        wtcolx,
+        value=None,
+        data_type=None,
     ):
         self.copy_row_dimension(rdrowx, wtrowx)
         self.copy_col_dimension(rdcolx, wtcolx)

@@ -39,10 +39,16 @@ class SheetMixin:
     def write_cell(self, cell_node, rv, cty):
         self.box.next_cell()
         self.merger.merge_cell(
-            cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right,
+            cell_node.rowx,
+            cell_node.colx,
+            self.box.bottom,
+            self.box.right,
         )
         self.copy_dimensions(
-            cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right,
+            cell_node.rowx,
+            cell_node.colx,
+            self.box.bottom,
+            self.box.right,
         )
         if cell_node.sheet_cell:
             cell_context = self.get_cell_context(cell_node, rv, cty)

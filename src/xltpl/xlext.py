@@ -15,7 +15,10 @@ class NodeExtension(Extension):
         args = [parser.parse_expression()]
         body = []
         return nodes.CallBlock(
-            self.call_method("_node", args), [], [], body,
+            self.call_method("_node", args),
+            [],
+            [],
+            body,
         ).set_lineno(lineno)
 
     def _node(self, key, caller):
@@ -119,7 +122,10 @@ class ImageExtension(Extension):
             args.append(nodes.Const(0))
         body = []
         return nodes.CallBlock(
-            self.call_method("_image", args), [], [], body,
+            self.call_method("_image", args),
+            [],
+            [],
+            body,
         ).set_lineno(lineno)
 
     def _image(self, image_ref, image_key, caller):
@@ -167,7 +173,10 @@ class ImagexExtension(Extension):
             args.append(nodes.Const(0))
         body = []
         return nodes.CallBlock(
-            self.call_method("_image", args), [], [], body,
+            self.call_method("_image", args),
+            [],
+            [],
+            body,
         ).set_lineno(lineno)
 
     def _image(self, image, image_index, caller):

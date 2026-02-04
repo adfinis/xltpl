@@ -76,7 +76,11 @@ class BookWriter(BookBase, BookMixin):
                     if not tag_test(value):
                         if rich_text:
                             cell_node = Cell(
-                                sheet_cell, rowx, colx, rich_text, data_type,
+                                sheet_cell,
+                                rowx,
+                                colx,
+                                rich_text,
+                                data_type,
                             )
                         else:
                             cell_node = Cell(sheet_cell, rowx, colx, value, data_type)

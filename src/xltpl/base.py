@@ -26,7 +26,8 @@ class SheetBase:
         self.rdsheet = rdsheet
         self.wtsheet_name = wtsheet_name
         self.wtsheet = wtsheet = self.wtbook.add_sheet(
-            wtsheet_name, cell_overwrite_ok=True,
+            wtsheet_name,
+            cell_overwrite_ok=True,
         )
         wtsheet.mc_ranges = {}
 
