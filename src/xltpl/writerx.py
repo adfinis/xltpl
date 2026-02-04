@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from openpyxl import load_workbook
 from openpyxl.cell.rich_text import CellRichText
 

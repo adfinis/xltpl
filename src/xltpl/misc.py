@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 class TreeProperty(object):
     def __init__(self, name):
         self.name = name

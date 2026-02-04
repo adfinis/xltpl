@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import copy
 
 from openpyxl.cell.text import InlineFont

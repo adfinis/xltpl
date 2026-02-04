@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 import six
 from openpyxl.utils import get_column_letter
 

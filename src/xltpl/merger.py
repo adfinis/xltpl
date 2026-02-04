@@ -1,6 +1,3 @@
-# -*- coding: utf-8 -*-
-
-
 class MergeMixin:
     def set_range(self, rdrowx=-1, rdcolx=-1, wtrowx=-1, wtcolx=-1):
         self.start_rdrowx = rdrowx

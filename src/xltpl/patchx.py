@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from openpyxl.writer.excel import ExcelWriter
 
 
