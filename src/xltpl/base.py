@@ -13,20 +13,20 @@ class SheetBase:
         l_wtsheet_name = wtsheet_name.lower()
         if l_wtsheet_name in self.wtbook.wtsheet_names:
             raise ValueError(
-                "A sheet named %r has already been added!" % l_wtsheet_name
+                "A sheet named %r has already been added!" % l_wtsheet_name,
             )
         self.wtbook.wtsheet_names.add(l_wtsheet_name)
         l_wtsheet_name = len(wtsheet_name)
         if len(wtsheet_name) > 31:
             raise ValueError(
                 "Sheet name cannot be more than 31 characters long, "
-                "supplied name was %i characters long!" % l_wtsheet_name
+                "supplied name was %i characters long!" % l_wtsheet_name,
             )
 
         self.rdsheet = rdsheet
         self.wtsheet_name = wtsheet_name
         self.wtsheet = wtsheet = self.wtbook.add_sheet(
-            wtsheet_name, cell_overwrite_ok=True
+            wtsheet_name, cell_overwrite_ok=True,
         )
         wtsheet.mc_ranges = {}
 
@@ -128,8 +128,7 @@ class SheetBase:
             wtsheet.copies_num = rdsheet.copies_num
 
     def copy_row_dimension(self, rdrowx, wtrowx):
-        """
-        This should be called every time processing of a new
+        """This should be called every time processing of a new
         row in the current sheet starts.
 
         :param rdrowx: the index of the row in the current sheet from which
@@ -205,7 +204,7 @@ class SheetBase:
         else:
             raise Exception(
                 "Unknown xlrd cell type %r with value %r at (sheet=%r,rowx=%r,colx=%r)"
-                % (cty, value, self.rdsheet.name, rdrowx, rdcolx)
+                % (cty, value, self.rdsheet.name, rdrowx, rdcolx),
             )
 
     def cell(self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, cty=None):
@@ -307,11 +306,11 @@ class BookBase:
         # Set the default style and the default font
         idx = self.wtbook.add_style(None)
         if idx == 0x10:
-            return
+            return None
         for idx, wtxf in enumerate(self.style_list):
             self.wtbook.add_style(wtxf)
             if idx == 15:
-                return
+                return None
         wtxf = self.style_list[0]
         for _ in range(15 - idx):
             self.wtbook.add_style(wtxf)
@@ -321,24 +320,23 @@ class BookBase:
         wtf = self.font_map.get(index)
         if wtf:
             return wtf
-        else:
-            wtf = xlwt.Font()
-            rdf = self.rdbook.font_list[index]
-            wtf.height = rdf.height
-            wtf.italic = rdf.italic
-            wtf.struck_out = rdf.struck_out
-            wtf.outline = rdf.outline
-            wtf.shadow = rdf.outline
-            wtf.colour_index = rdf.colour_index
-            wtf.bold = rdf.bold
-            wtf._weight = rdf.weight
-            wtf.escapement = rdf.escapement
-            wtf.underline = rdf.underline_type
-            wtf.family = rdf.family
-            wtf.charset = rdf.character_set
-            wtf.name = rdf.name
-            self.font_map[index] = wtf
-            return wtf
+        wtf = xlwt.Font()
+        rdf = self.rdbook.font_list[index]
+        wtf.height = rdf.height
+        wtf.italic = rdf.italic
+        wtf.struck_out = rdf.struck_out
+        wtf.outline = rdf.outline
+        wtf.shadow = rdf.outline
+        wtf.colour_index = rdf.colour_index
+        wtf.bold = rdf.bold
+        wtf._weight = rdf.weight
+        wtf.escapement = rdf.escapement
+        wtf.underline = rdf.underline_type
+        wtf.family = rdf.family
+        wtf.charset = rdf.character_set
+        wtf.name = rdf.name
+        self.font_map[index] = wtf
+        return wtf
 
     def get_font(self, sheet, rowx, colx):
         xf = self.rdbook.xf_list[sheet.cell_xf_index(rowx, colx)]
@@ -347,7 +345,7 @@ class BookBase:
     def get_rich_text(self, sheet, rowx, colx):
         cell_value = sheet.cell_value(rowx, colx)
         if not cell_value:
-            return
+            return None
         runlist = sheet.rich_text_runlist_map.get((rowx, colx))
         if runlist:
             rich_text = []

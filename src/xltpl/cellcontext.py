@@ -23,7 +23,7 @@ def get_type(value):
     return value, dt
 
 
-class Base(object):
+class Base:
     def __init__(self, sheet_writer, cell_node, value, data_type):
         self.sheet_writer = sheet_writer
         self.cell_node = cell_node
@@ -166,7 +166,7 @@ class CellContext(Base):
         else:
             raise Exception(
                 "Unknown xlrd cell type %r with value %r at (sheet=%r,rowx=%r,colx=%r)"
-                % (cty, value, self.rdsheet.name, rdrowx, rdcolx)
+                % (cty, value, self.rdsheet.name, rdrowx, rdcolx),
             )
 
     def finish(self):

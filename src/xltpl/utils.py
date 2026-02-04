@@ -23,8 +23,8 @@ AFTERCELL = "aftercell"
 RANGE = "range"
 BEFORERANGE = "beforerange"
 AFTERRANGE = "afterrange"
-COORD = "[a-z]{1,3}\d+"
-RANGETAG = "%s *%s *(%s:%s\S*?) *%s" % (
+COORD = r"[a-z]{1,3}\d+"
+RANGETAG = r"%s *%s *(%s:%s\S*?) *%s" % (
     RANGE,
     VARIABLE_START_STRING,
     COORD,
@@ -77,23 +77,22 @@ def split(splitter, txt):
 
 
 def parse_cell_tag(txt):
-    cell_pattern = re.compile(CELLTAG, re.I)
-    split_pattern = re.compile(CELLSPLITTER, re.I)
+    cell_pattern = re.compile(CELLTAG, re.IGNORECASE)
+    split_pattern = re.compile(CELLSPLITTER, re.IGNORECASE)
     parts = cell_pattern.split(txt)
     if len(parts) > 1:
         tag = parts[2]
         tag_map = split(split_pattern, tag)
         return parts[1], tag_map
-    else:
-        tag = txt
-        tag_map = split(split_pattern, tag)
-        return None, tag_map
+    tag = txt
+    tag_map = split(split_pattern, tag)
+    return None, tag_map
     return None, None
 
 
 def parse_range_tag(txt):
-    range_pattern = re.compile(RANGETAG, re.I)
-    split_pattern = re.compile(RANGESPLITTER, re.I)
+    range_pattern = re.compile(RANGETAG, re.IGNORECASE)
+    split_pattern = re.compile(RANGESPLITTER, re.IGNORECASE)
     parts = range_pattern.split(txt)
     if len(parts) > 1:
         tag = parts[2]
@@ -127,9 +126,9 @@ def img_test(txt):
     return bool(rv)
 
 
-FIXTEST = "({(?:___\d+___)?(?:{|%).+?(?:}|%)(?:___\d+___)?})"
-RUNSPLIT = "(___\d+___)"
-RUNSPLIT2 = "___(\d+)___"
+FIXTEST = r"({(?:___\d+___)?(?:{|%).+?(?:}|%)(?:___\d+___)?})"
+RUNSPLIT = r"(___\d+___)"
+RUNSPLIT2 = r"___(\d+)___"
 
 
 # need a better way to handle this

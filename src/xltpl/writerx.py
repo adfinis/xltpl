@@ -76,7 +76,7 @@ class BookWriter(BookBase, BookMixin):
                     if not tag_test(value):
                         if rich_text:
                             cell_node = Cell(
-                                sheet_cell, rowx, colx, rich_text, data_type
+                                sheet_cell, rowx, colx, rich_text, data_type,
                             )
                         else:
                             cell_node = Cell(sheet_cell, rowx, colx, value, data_type)
@@ -100,7 +100,7 @@ class BookWriter(BookBase, BookMixin):
                     if colx == 1:
                         row_node.cell_tag = cell_tag
                 tree.add_child(cell_node)
-        tree.add_child(Node())  #
+        tree.add_child(Node())
         return tree
 
     def cleanup_defined_names(self):

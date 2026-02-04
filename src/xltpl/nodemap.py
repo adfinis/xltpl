@@ -53,12 +53,11 @@ class NodeMap:
     def get_node(self, key):
         if key == self.current_key:
             return self.current_node
-        else:
-            self.last_key = self.current_key
-            self.last_node = self.current_node
-            self.current_node = self.node_map.get(key)
-            self.current_key = key
-            self.find_lca(self.last_node, self.current_node)
+        self.last_key = self.current_key
+        self.last_node = self.current_node
+        self.current_node = self.node_map.get(key)
+        self.current_key = key
+        self.find_lca(self.last_node, self.current_node)
         return self.current_node
 
     def get_tag_node(self, key):

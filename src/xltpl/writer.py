@@ -91,7 +91,7 @@ class BookWriter(BookBase, BookMixin):
                     if colx == 0:
                         row_node.cell_tag = cell_tag
                 tree.add_child(cell_node)
-        tree.add_child(Node())  #
+        tree.add_child(Node())
         return tree
 
     def render_sheet(self, payload, left_top=None):

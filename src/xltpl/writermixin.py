@@ -1,4 +1,4 @@
-class Box(object):
+class Box:
     def __init__(self, top, left):
         self.reset_pos(top, left)
 
@@ -16,7 +16,7 @@ class Box(object):
         self.right = left
 
 
-class SheetMixin(object):
+class SheetMixin:
     def copy_dimensions(self, rdrowx, rdcolx, wtrowx, wtcolx):
         self.copy_row_dimension(rdrowx, wtrowx)
         self.copy_col_dimension(rdcolx, wtcolx)
@@ -39,10 +39,10 @@ class SheetMixin(object):
     def write_cell(self, cell_node, rv, cty):
         self.box.next_cell()
         self.merger.merge_cell(
-            cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right
+            cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right,
         )
         self.copy_dimensions(
-            cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right
+            cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right,
         )
         if cell_node.sheet_cell:
             cell_context = self.get_cell_context(cell_node, rv, cty)
@@ -59,7 +59,7 @@ class SheetMixin(object):
         self.merger.set_image_ref(image_ref)
 
 
-class BookMixin(object):
+class BookMixin:
     def load(self, fname):
         pass
 

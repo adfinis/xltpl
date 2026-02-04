@@ -12,7 +12,7 @@ class DebugInfo:
         self.cell_tag = None
 
 
-class Node(object):
+class Node:
     node_map = TreeProperty("node_map")
     ext_tag = "node"
 
@@ -193,8 +193,7 @@ class Section(Node):
             text = "".join(self.child_rvs)
             if isinstance(self, TagCell):
                 return text
-            else:
-                return self.rich_handler.rich_segment(text, self.font)
+            return self.rich_handler.rich_segment(text, self.font)
         richs = self.richs
         rvs = self.child_rvs
         font = self.font
@@ -453,7 +452,7 @@ class Tree(Node):
 
 
 def create_cell(
-    sheet_cell, rowx, colx, value, rich_text, data_type, font, rich_handler
+    sheet_cell, rowx, colx, value, rich_text, data_type, font, rich_handler,
 ):
     s, cell_tag, head, tail = find_cell_tag(value)
     if s == "":
@@ -464,17 +463,16 @@ def create_cell(
         cell = XvCell(sheet_cell, rowx, colx, s, data_type, False)
     elif not rich_text:
         cell = TagCell(sheet_cell, rowx, colx, s, data_type, font, rich_handler)
+    elif head == 0 and tail == 0:
+        cell = RichTagCell(
+            sheet_cell, rowx, colx, rich_text, data_type, font, rich_handler,
+        )
     else:
-        if head == 0 and tail == 0:
-            cell = RichTagCell(
-                sheet_cell, rowx, colx, rich_text, data_type, font, rich_handler
-            )
-        else:
-            _tail = head + len(s) - 1
-            _rich, _text = rich_handler.mid(rich_text, head, _tail)
-            cell = RichTagCell(
-                sheet_cell, rowx, colx, _rich, data_type, font, rich_handler
-            )
+        _tail = head + len(s) - 1
+        _rich, _text = rich_handler.mid(rich_text, head, _tail)
+        cell = RichTagCell(
+            sheet_cell, rowx, colx, _rich, data_type, font, rich_handler,
+        )
     if cell_tag:
         cell.cell_tag = cell_tag
     return cell

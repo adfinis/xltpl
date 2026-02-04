@@ -15,7 +15,7 @@ class NodeExtension(Extension):
         args = [parser.parse_expression()]
         body = []
         return nodes.CallBlock(
-            self.call_method("_node", args), [], [], body
+            self.call_method("_node", args), [], [], body,
         ).set_lineno(lineno)
 
     def _node(self, key, caller):
@@ -31,7 +31,7 @@ class SegmentExtension(Extension):
         args = [parser.parse_expression()]
         body = parser.parse_statements(["name:endseg"], drop_needle=True)
         return nodes.CallBlock(self.call_method("_seg", args), [], [], body).set_lineno(
-            lineno
+            lineno,
         )
 
     def _seg(self, key, caller):
@@ -53,7 +53,7 @@ class XvExtension(Extension):
             args.append(nodes.Const(0))
         body = []
         return nodes.CallBlock(self.call_method("_xv", args), [], [], body).set_lineno(
-            lineno
+            lineno,
         )
 
     def _xv(self, xv, key, caller):
@@ -78,7 +78,7 @@ class OpExtension(Extension):
         args.append(nodes.List(func_args))
         body = []
         return nodes.CallBlock(self.call_method("_op", args), [], [], body).set_lineno(
-            lineno
+            lineno,
         )
 
     def _op(self, func, func_args, caller):
@@ -100,7 +100,7 @@ class NoopExtension(Extension):
         args.append(nodes.List(func_args))
         body = []
         return nodes.CallBlock(self.call_method("_op", args), [], [], body).set_lineno(
-            lineno
+            lineno,
         )
 
     def _op(self, func, func_args, caller):
@@ -119,7 +119,7 @@ class ImageExtension(Extension):
             args.append(nodes.Const(0))
         body = []
         return nodes.CallBlock(
-            self.call_method("_image", args), [], [], body
+            self.call_method("_image", args), [], [], body,
         ).set_lineno(lineno)
 
     def _image(self, image_ref, image_key, caller):
@@ -167,7 +167,7 @@ class ImagexExtension(Extension):
             args.append(nodes.Const(0))
         body = []
         return nodes.CallBlock(
-            self.call_method("_image", args), [], [], body
+            self.call_method("_image", args), [], [], body,
         ).set_lineno(lineno)
 
     def _image(self, image, image_index, caller):

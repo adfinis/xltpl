@@ -66,16 +66,15 @@ def find_cell_tag(text):
                 index += 1
                 continue
             break
+        ignored, is_beforerow = tag_parser.parse(part)
+        if ignored:
+            break
+        if is_beforerow:
+            _beforerow += part
+            index += 1
         else:
-            ignored, is_beforerow = tag_parser.parse(part)
-            if ignored:
-                break
-            if is_beforerow:
-                _beforerow += part
-                index += 1
-            else:
-                stop = False
-                break
+            stop = False
+            break
     if not stop:
         for part in parts[index:]:
             if index % 2 == 0:
@@ -83,12 +82,11 @@ def find_cell_tag(text):
                     index += 1
                     continue
                 break
-            else:
-                ignored, _ = tag_parser.parse(part)
-                if ignored:
-                    break
-                _beforecell += part
-                index += 1
+            ignored, _ = tag_parser.parse(part)
+            if ignored:
+                break
+            _beforecell += part
+            index += 1
     _reversed = reversed(parts[index:])
     index = 0
     for part in _reversed:
@@ -97,12 +95,11 @@ def find_cell_tag(text):
                 index += 1
                 continue
             break
-        else:
-            ignored, _ = tag_parser.parse(part)
-            if ignored:
-                break
-            _aftercell = part + _aftercell
-            index += 1
+        ignored, _ = tag_parser.parse(part)
+        if ignored:
+            break
+        _aftercell = part + _aftercell
+        index += 1
     if _beforerow or _beforecell or _aftercell:
         head = len(_beforerow) + len(_beforecell)
         tail = len(_aftercell)
@@ -116,5 +113,4 @@ def find_cell_tag(text):
             s = text[head:-tail]
         # print(s, cell_tag, head, tail)
         return s, cell_tag, head, tail
-    else:
-        return text, None, 0, 0
+    return text, None, 0, 0

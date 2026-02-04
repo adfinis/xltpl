@@ -24,7 +24,7 @@ class SheetState:
     def get_sheet_resource(self):
         if not self.sheet_resource:
             self.sheet_resource = SheetResource(
-                self.book_writer, self.rdsheet, self.index, self.jinja_env
+                self.book_writer, self.rdsheet, self.index, self.jinja_env,
             )
         return self.sheet_resource
 

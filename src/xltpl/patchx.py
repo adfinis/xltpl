@@ -10,8 +10,7 @@ class ExWriter(ExcelWriter):
                 _w = _written.get(key)
                 if _w:
                     continue
-                else:
-                    _written[key] = True
+                _written[key] = True
             else:
                 print(img, "not Img")
             self._archive.writestr(img.path[1:], img._data())

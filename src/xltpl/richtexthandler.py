@@ -32,7 +32,7 @@ class RichTextHandler:
     def text_content(cls, value):
         if isinstance(value, six.text_type):
             return value
-        elif isinstance(value, list):
+        if isinstance(value, list):
             x = []
             for text, font in value:
                 x.append(text)
@@ -55,8 +55,7 @@ class RichTextHandler:
                 segments.append(segment)
         if segments:
             return segments
-        else:
-            return ""
+        return ""
 
     @classmethod
     def mid(cls, rich_text, head, tail):
@@ -72,7 +71,7 @@ class RichTextHandler:
             end += l_text
             if end < head:
                 continue
-            elif st <= head <= end:
+            if st <= head <= end:
                 if end < tail:
                     text_st = head - st
                     text = segment_text[text_st:]
@@ -166,7 +165,7 @@ class RichTextHandlerX:
             end += l_text
             if end < head:
                 continue
-            elif st <= head <= end:
+            if st <= head <= end:
                 if end < tail:
                     text_st = head - st
                     text = segment_text[text_st:]

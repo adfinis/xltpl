@@ -16,8 +16,7 @@ class MergeMixin:
     def to_be_merged(self, rdrowx, rdcolx):
         if rdrowx > self.start_rdrowx:
             return True
-        else:
-            return rdrowx == self.start_rdrowx and rdcolx > self.start_rdcolx
+        return rdrowx == self.start_rdrowx and rdcolx > self.start_rdcolx
 
     def merge_cell(self, rdrowx, rdcolx, wtrowx, wtcolx):
         if not self.is_in_range(rdrowx, rdcolx):

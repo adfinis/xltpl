@@ -52,7 +52,7 @@ class SheetBase:
         self.wtcols.add(wtcolx)
 
     def _cell(
-        self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None
+        self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None,
     ):
         target_cell = self.wtsheet.cell(column=wtcolx, row=wtrowx)
         if value is None:
@@ -76,7 +76,7 @@ class SheetBase:
         return target_cell
 
     def cell(
-        self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None
+        self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None,
     ):
         self.copy_row_dimension(rdrowx, wtrowx)
         self.copy_col_dimension(rdcolx, wtcolx)
@@ -91,23 +91,22 @@ class BookBase:
         ifont = self.font_map.get(fontId)
         if ifont:
             return ifont
-        else:
-            font = self.workbook._fonts[fontId]
-            ifont = InlineFont()
-            ifont.rFont = font.name
-            ifont.charset = font.charset
-            ifont.family = font.family
-            ifont.b = font.b
-            ifont.i = font.i
-            ifont.strike = font.strike
-            ifont.outline = font.outline
-            ifont.shadow = font.shadow
-            ifont.condense = font.condense
-            ifont.extend = font.extend
-            ifont.color = font.color
-            ifont.sz = font.sz
-            ifont.u = font.u
-            ifont.vertAlign = font.vertAlign
-            ifont.scheme = font.scheme
-            self.font_map[fontId] = ifont
-            return ifont
+        font = self.workbook._fonts[fontId]
+        ifont = InlineFont()
+        ifont.rFont = font.name
+        ifont.charset = font.charset
+        ifont.family = font.family
+        ifont.b = font.b
+        ifont.i = font.i
+        ifont.strike = font.strike
+        ifont.outline = font.outline
+        ifont.shadow = font.shadow
+        ifont.condense = font.condense
+        ifont.extend = font.extend
+        ifont.color = font.color
+        ifont.sz = font.sz
+        ifont.u = font.u
+        ifont.vertAlign = font.vertAlign
+        ifont.scheme = font.scheme
+        self.font_map[fontId] = ifont
+        return ifont

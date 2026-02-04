@@ -25,10 +25,8 @@ def yn(value, font, xlsx):
     if value:
         if xlsx:
             return yesx(font)
-        else:
-            return yes(font)
-    else:
-        return no()
+        return yes(font)
+    return no()
 
 
 class YnExtension(Extension):
@@ -44,7 +42,7 @@ class YnExtension(Extension):
             args.append(nodes.Const(None))
         body = []
         return nodes.CallBlock(self.call_method("_yn", args), [], [], body).set_lineno(
-            lineno
+            lineno,
         )
 
     def _yn(self, arg0, arg1, caller):

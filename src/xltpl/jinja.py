@@ -1,8 +1,8 @@
 import re
 import sys
 
-from jinja2.sandbox import SandboxedEnvironment as Environment
 from jinja2.exceptions import TemplateSyntaxError
+from jinja2.sandbox import SandboxedEnvironment as Environment
 
 from .xlext import (
     ImageExtension,
@@ -32,7 +32,7 @@ class Env(Environment):
         Environment.handle_exception(self, *args, **kwargs)
 
     def get_debug_info(self, line):
-        p = re.compile("'(\d*,\d*[,\d]*)'")
+        p = re.compile(r"'(\d*,\d*[,\d]*)'")
         m = p.findall(line)
         debug_info = None
         if len(m) > 0:

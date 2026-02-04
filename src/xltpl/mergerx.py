@@ -28,7 +28,7 @@ class CellMerge(MergeMixin):
         ):
             return
         range = CellRange(
-            None, self.start_wtcolx, self.start_wtrowx, self.end_wtcolx, self.end_wtrowx
+            None, self.start_wtcolx, self.start_wtrowx, self.end_wtcolx, self.end_wtrowx,
         )
         self.merger.add_new_range(range)
 
@@ -75,7 +75,7 @@ class DataValidation(MergeMixin):
         if self.start_wtrowx == -1:
             return
         range = CellRange(
-            None, self.start_wtcolx, self.start_wtrowx, self.end_wtcolx, self.end_wtrowx
+            None, self.start_wtcolx, self.start_wtrowx, self.end_wtcolx, self.end_wtrowx,
         )
         self.merger.add_new_range(self.dv_key, range)
 

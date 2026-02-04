@@ -1,4 +1,4 @@
-class TreeProperty(object):
+class TreeProperty:
     def __init__(self, name):
         self.name = name
         self._name = "_" + name
