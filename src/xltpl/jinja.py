@@ -1,14 +1,17 @@
-import sys, re
+import re
+import sys
+
 from jinja2 import Environment
 from jinja2.exceptions import TemplateSyntaxError
+
 from .xlext import (
-    NodeExtension,
-    SegmentExtension,
-    XvExtension,
     ImageExtension,
     ImagexExtension,
-    OpExtension,
+    NodeExtension,
     NoopExtension,
+    OpExtension,
+    SegmentExtension,
+    XvExtension,
 )
 from .ynext import YnExtension, YnxExtension
 

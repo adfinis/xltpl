@@ -2,9 +2,10 @@
 
 import six
 from openpyxl.utils import get_column_letter
-from .utils import tag_test, xv_test, v_test
+
+from .celltag import block_split_pattern, find_cell_tag, tag_parser
 from .misc import TreeProperty
-from .celltag import find_cell_tag, block_split_pattern, tag_parser
+from .utils import v_test, xv_test
 
 
 class DebugInfo:

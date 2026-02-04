@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import os
+from inspect import isfunction
+
 import six
 from jinja2 import nodes
 from jinja2.ext import Extension
 from jinja2.runtime import Undefined
-from inspect import isfunction
 
 
 class NodeExtension(Extension):

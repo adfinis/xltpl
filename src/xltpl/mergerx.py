@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from copy import copy
+
 from openpyxl.worksheet.cell_range import CellRange, MultiCellRange
-from .merger import MergeMixin
+
 from .image import Img
+from .merger import MergeMixin
 
 
 class MergerMixin:

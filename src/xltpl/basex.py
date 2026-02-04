@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import copy
-from openpyxl.utils import get_column_letter
+
 from openpyxl.cell.text import InlineFont
+from openpyxl.utils import get_column_letter
+
 from .cellcontext import CellContextX
 
 

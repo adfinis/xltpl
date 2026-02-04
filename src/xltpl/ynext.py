@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import copy
+
 from jinja2 import nodes
 from jinja2.ext import Extension
 from openpyxl.cell.rich_text import TextBlock

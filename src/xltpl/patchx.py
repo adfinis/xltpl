@@ -24,8 +24,8 @@ ExcelWriter._write_images = ExWriter._write_images
 """
 fix  image error
 """
-from openpyxl.xml.constants import DRAWING_NS
 from openpyxl.drawing.geometry import GeomGuideList
+from openpyxl.xml.constants import DRAWING_NS
 
 GeomGuideList.tagname = "avLst"
 GeomGuideList.namespace = DRAWING_NS

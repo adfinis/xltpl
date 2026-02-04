@@ -1,8 +1,9 @@
 import copy
+
 import xlrd
 import xlwt
+from openpyxl.cell.cell import NUMERIC_TYPES, STRING_TYPES, TIME_TYPES
 from openpyxl.utils.datetime import to_excel
-from openpyxl.cell.cell import NUMERIC_TYPES, TIME_TYPES, STRING_TYPES
 
 BOOL_TYPE = bool
 
@@ -150,7 +151,7 @@ class CellContext(Base):
                 try:
                     formula = xlwt.Formula(value[1:])
                     wtrow.set_cell_formula(wtcolx, formula, style)
-                except BaseException as e:
+                except BaseException:
                     wtrow.set_cell_text(wtcolx, value, style)
             else:
                 wtrow.set_cell_text(wtcolx, value, style)

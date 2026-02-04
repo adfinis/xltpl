@@ -2,17 +2,17 @@
 
 import six
 
-from .base import SheetBase, BookBase
-from .writermixin import SheetMixin, BookMixin, Box
-from .utils import tag_test, parse_cell_tag
-from .xlnode import Tree, Row, Cell, EmptyCell, Node, create_cell
-from .jinja import JinjaEnv
-from .nodemap import NodeMap
-from .sheetresource import SheetResourceMap
-from .richtexthandler import rich_handler
-from .merger import Merger
-from .config import config
+from .base import BookBase, SheetBase
 from .celltag import CellTag
+from .config import config
+from .jinja import JinjaEnv
+from .merger import Merger
+from .nodemap import NodeMap
+from .richtexthandler import rich_handler
+from .sheetresource import SheetResourceMap
+from .utils import parse_cell_tag, tag_test
+from .writermixin import BookMixin, Box, SheetMixin
+from .xlnode import Cell, EmptyCell, Node, Row, Tree, create_cell
 
 
 class SheetWriter(SheetBase, SheetMixin):

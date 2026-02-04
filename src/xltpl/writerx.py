@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from .patchx import *
 from openpyxl import load_workbook
 from openpyxl.cell.rich_text import CellRichText
-from .basex import SheetBase, BookBase
-from .writermixin import SheetMixin, BookMixin, Box
-from .utils import tag_test, parse_cell_tag
-from .xlnode import Tree, Row, Cell, EmptyCell, Node, create_cell
-from .jinja import JinjaEnvx
-from .nodemap import NodeMap
-from .sheetresource import SheetResourceMap
-from .richtexthandler import rich_handlerx
-from .mergerx import Merger
-from .config import config
+
+from .basex import BookBase, SheetBase
 from .celltag import CellTag
+from .config import config
 from .image import img_cache
+from .jinja import JinjaEnvx
+from .mergerx import Merger
+from .nodemap import NodeMap
+from .patchx import *
+from .richtexthandler import rich_handlerx
+from .sheetresource import SheetResourceMap
+from .utils import parse_cell_tag, tag_test
+from .writermixin import BookMixin, Box, SheetMixin
+from .xlnode import Cell, EmptyCell, Node, Row, Tree, create_cell
 
 
 class SheetWriter(SheetBase, SheetMixin):

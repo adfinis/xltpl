@@ -1,6 +1,7 @@
 import re
-from jinja2.lexer import Lexer
+
 from jinja2.environment import Environment
+from jinja2.lexer import Lexer
 
 BLOCK_START_STRING = "{%"
 BLOCK_END_STRING = "%}"

@@ -1,4 +1,5 @@
 from copy import deepcopy
+
 from openpyxl.drawing.image import Image
 
 

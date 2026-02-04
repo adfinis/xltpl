@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-import six
 from copy import copy
-from .utils import fix_test, tag_fix
+
+import six
 from openpyxl.cell.rich_text import CellRichText, TextBlock
+
+from .utils import fix_test, tag_fix
 
 
 class RichTextHandler:
