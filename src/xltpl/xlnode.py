@@ -6,15 +6,16 @@ from .utils import tag_test, xv_test, v_test
 from .misc import TreeProperty
 from .celltag import find_cell_tag, block_split_pattern, tag_parser
 
-class DebugInfo():
 
+class DebugInfo:
     def __init__(self):
         self.value = None
         self.cell_tag = None
 
+
 class Node(object):
-    node_map = TreeProperty('node_map')
-    ext_tag = 'node'
+    node_map = TreeProperty("node_map")
+    ext_tag = "node"
 
     def __init__(self):
         self._children = []
@@ -33,7 +34,7 @@ class Node(object):
 
     @property
     def node_key(self):
-        return '%s,%d' % (self._parent.node_key, self.no)
+        return "%s,%d" % (self._parent.node_key, self.no)
 
     @property
     def node_tag(self):
@@ -47,7 +48,7 @@ class Node(object):
         x = []
         for child in self._children:
             x.append(child.to_tag())
-        return '\n'.join(x)
+        return "\n".join(x)
 
     def to_tag(self):
         if self._children:
@@ -56,7 +57,7 @@ class Node(object):
         return self.node_tag
 
     def tag_tree(self):
-        print('\t' * self.depth, self.print_tag)
+        print("\t" * self.depth, self.print_tag)
         for child in self._children:
             child.tag_tree()
 
@@ -78,7 +79,7 @@ class Node(object):
         pass
 
     def __str__(self):
-        return self.__class__.__name__ + ' , ' + self.node_tag
+        return self.__class__.__name__ + " , " + self.node_tag
 
     def set_image_ref(self, image_ref):
         self._parent.set_image_ref(image_ref)
@@ -90,8 +91,8 @@ class Node(object):
     def current_cell(self):
         return self._parent.current_cell
 
-class Segment(Node):
 
+class Segment(Node):
     def __init__(self, text):
         Node.__init__(self)
         self.text = text
@@ -110,17 +111,20 @@ class Segment(Node):
         debug.value = self.text
         if debug.cell_tag:
             if debug.cell_tag.beforecell:
-                if self.no==0:
-                    if isinstance(self._parent, TagCell) or self._parent.no==0:
+                if self.no == 0:
+                    if isinstance(self._parent, TagCell) or self._parent.no == 0:
                         debug.value = debug.cell_tag.beforecell + debug.value
             if debug.cell_tag.aftercell:
                 if self.no == len(self._parent._children) - 1:
-                    if isinstance(self._parent, TagCell) or self._parent.no == len(self._parent._parent._children) - 1:
+                    if (
+                        isinstance(self._parent, TagCell)
+                        or self._parent.no == len(self._parent._parent._children) - 1
+                    ):
                         debug.value += debug.cell_tag.aftercell
         return debug
 
-class RichSegment(Segment):
 
+class RichSegment(Segment):
     def __init__(self, text, font):
         Segment.__init__(self, text)
         self.font = font
@@ -133,21 +137,21 @@ class RichSegment(Segment):
         self.rv = rv
         return self.text
 
-class BlockSegment(Segment):
 
+class BlockSegment(Segment):
     @property
     def node_tag(self):
         return self.text
 
-class ImageSegment(Segment):
 
+class ImageSegment(Segment):
     @property
     def node_tag(self):
         fmt = "{%%seg '%s'%%}{%%endseg%%}%s"
         return fmt % (self.node_key, self.text)
 
-class OpSegment(Segment):
 
+class OpSegment(Segment):
     @property
     def node_tag(self):
         fmt = "{%%seg '%s'%%}{%%endseg%%}%s"
@@ -156,8 +160,8 @@ class OpSegment(Segment):
     def add_op(self, op):
         self._parent.add_op(op)
 
-class Section(Node):
 
+class Section(Node):
     def __init__(self, text, font, rich_handler):
         Node.__init__(self)
         self.font = font
@@ -168,18 +172,18 @@ class Section(Node):
         parts = block_split_pattern.split(text)
         for index, part in enumerate(parts):
             if index % 2 == 0:
-                if part == '':
+                if part == "":
                     continue
                 child = Segment(part)
             else:
                 tag = tag_parser.parse_tag(part)
-                if tag == 'img':
+                if tag == "img":
                     child = ImageSegment(part)
-                elif tag == 'yn':
+                elif tag == "yn":
                     child = RichSegment(part, self.font)
-                elif tag == 'xv':
+                elif tag == "xv":
                     child = Segment(part)
-                elif tag == 'op':
+                elif tag == "op":
                     child = OpSegment(part)
                 else:
                     child = BlockSegment(part)
@@ -187,7 +191,7 @@ class Section(Node):
 
     def pack(self):
         if not self.richs:
-            text = ''.join(self.child_rvs)
+            text = "".join(self.child_rvs)
             if isinstance(self, TagCell):
                 return text
             else:
@@ -206,7 +210,7 @@ class Section(Node):
                     text = rvs[st]
                 else:
                     slice = rvs[st:i]
-                    text = ''.join(slice)
+                    text = "".join(slice)
                 rich_text = self.rich_handler.rich_segment(text, self.font)
                 rv.append(rich_text)
             if i < len(rvs):
@@ -230,8 +234,9 @@ class Section(Node):
     def add_op(self, op):
         self._parent.add_op(op)
 
+
 class Cell(Node):
-    ext_tag = 'cell'
+    ext_tag = "cell"
 
     def __init__(self, sheet_cell, rowx, colx, value, cty):
         Node.__init__(self)
@@ -278,16 +283,18 @@ class Cell(Node):
         debug = DebugInfo()
         coordinate = self.get_coordinate(offset)
         debug.coordinate = coordinate
-        debug.address = 'Cell %s' % coordinate
+        debug.address = "Cell %s" % coordinate
         if self.cell_tag:
             debug.cell_tag = self.cell_tag
-            debug.value = self.cell_tag.beforecell + str(self.value) + self.cell_tag.aftercell
+            debug.value = (
+                self.cell_tag.beforecell + str(self.value) + self.cell_tag.aftercell
+            )
         else:
             debug.value = self.value
         return debug
 
-class TagCell(Section, Cell):
 
+class TagCell(Section, Cell):
     def __init__(self, sheet_cell, rowx, colx, value, cty, font, rich_handler):
         Cell.__init__(self, sheet_cell, rowx, colx, value, cty)
         self.font = font
@@ -301,7 +308,7 @@ class TagCell(Section, Cell):
         if not isinstance(rv, six.text_type):
             rv = self.rich_handler.rich_content(rv)
         self.write(rv, self.cty)
-		
+
     def add_op(self, op):
         self.ops.append(op)
 
@@ -314,7 +321,6 @@ class TagCell(Section, Cell):
 
 
 class RichTagCell(Cell):
-
     def __init__(self, sheet_cell, rowx, colx, value, cty, font, rich_handler):
         Cell.__init__(self, sheet_cell, rowx, colx, value, cty)
         self.font = font
@@ -340,7 +346,7 @@ class RichTagCell(Cell):
             self.child_rvs.extend(rv)
         else:
             self.child_rvs.append(rv)
-	
+
     def add_op(self, op):
         self.ops.append(op)
 
@@ -351,8 +357,8 @@ class RichTagCell(Cell):
     def current_cell(self):
         return self
 
-class EmptyCell(Cell):
 
+class EmptyCell(Cell):
     def __init__(self, rowx, colx):
         Node.__init__(self)
         self.sheet_cell = None
@@ -362,8 +368,8 @@ class EmptyCell(Cell):
         self.cty = None
         self.cell_tag = None
 
-class XvCell(Cell):
 
+class XvCell(Cell):
     def __init__(self, sheet_cell, rowx, colx, value, cty, isXv):
         Cell.__init__(self, sheet_cell, rowx, colx, value, cty)
         self.isXv = isXv
@@ -373,11 +379,11 @@ class XvCell(Cell):
         tag = self.value.strip()
         if self.isXv:
             head = tag[:-2].strip()
-            #tag = "%s,%d%%}" % (head, self.node_key)
+            # tag = "%s,%d%%}" % (head, self.node_key)
             tag = "%s,'%s'%%}" % (head, self.node_key)
         else:
             body = tag[2:-2].strip()
-            #tag = "{%%xv %s,%d%%}" % (body, self.node_key)
+            # tag = "{%%xv %s,%d%%}" % (body, self.node_key)
             tag = "{%%xv %s,'%s'%%}" % (body, self.node_key)
         return tag
 
@@ -389,7 +395,7 @@ class XvCell(Cell):
 
 
 class Row(Node):
-    ext_tag = 'row'
+    ext_tag = "row"
 
     def __init__(self, rowx):
         Node.__init__(self)
@@ -408,13 +414,14 @@ class Row(Node):
 
     def get_debug_info(self, offset):
         debug = DebugInfo()
-        debug.address = 'Row %d' % (self.rowx + offset)
+        debug.address = "Row %d" % (self.rowx + offset)
         if self.cell_tag:
             debug.value = self.cell_tag.beforerow
         return debug
 
+
 class Tree(Node):
-    ext_tag = 'tree'
+    ext_tag = "tree"
 
     def __init__(self, index, node_map):
         Node.__init__(self)
@@ -442,12 +449,15 @@ class Tree(Node):
 
     def get_debug_info(self, offset):
         debug = DebugInfo()
-        debug.address = 'Sheet %s' % self.no
+        debug.address = "Sheet %s" % self.no
         return debug
 
-def create_cell(sheet_cell, rowx, colx, value, rich_text, data_type, font, rich_handler):
-    s,cell_tag,head,tail = find_cell_tag(value)
-    if s == '':
+
+def create_cell(
+    sheet_cell, rowx, colx, value, rich_text, data_type, font, rich_handler
+):
+    s, cell_tag, head, tail = find_cell_tag(value)
+    if s == "":
         cell = Cell(sheet_cell, rowx, colx, s, data_type)
     elif xv_test(s):
         cell = XvCell(sheet_cell, rowx, colx, s, data_type, True)
@@ -457,11 +467,15 @@ def create_cell(sheet_cell, rowx, colx, value, rich_text, data_type, font, rich_
         cell = TagCell(sheet_cell, rowx, colx, s, data_type, font, rich_handler)
     else:
         if head == 0 and tail == 0:
-            cell = RichTagCell(sheet_cell, rowx, colx, rich_text, data_type, font, rich_handler)
+            cell = RichTagCell(
+                sheet_cell, rowx, colx, rich_text, data_type, font, rich_handler
+            )
         else:
             _tail = head + len(s) - 1
-            _rich,_text = rich_handler.mid(rich_text, head, _tail)
-            cell = RichTagCell(sheet_cell, rowx, colx, _rich, data_type, font, rich_handler)
+            _rich, _text = rich_handler.mid(rich_text, head, _tail)
+            cell = RichTagCell(
+                sheet_cell, rowx, colx, _rich, data_type, font, rich_handler
+            )
     if cell_tag:
         cell.cell_tag = cell_tag
     return cell

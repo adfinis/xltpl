@@ -14,8 +14,8 @@ from .merger import Merger
 from .config import config
 from .celltag import CellTag
 
-class SheetWriter(SheetBase, SheetMixin):
 
+class SheetWriter(SheetBase, SheetMixin):
     def __init__(self, bookwriter, sheet_resource, sheet_name):
         self.rdbook = bookwriter.rdbook
         self.wtbook = bookwriter.wtbook
@@ -26,6 +26,7 @@ class SheetWriter(SheetBase, SheetMixin):
         self.wtrows = set()
         self.wtcols = set()
         self.box = Box(-1, -1)
+
 
 class BookWriter(BookBase, BookMixin):
     sheet_writer_cls = SheetWriter
@@ -42,7 +43,7 @@ class BookWriter(BookBase, BookMixin):
         self.merger_cls = Merger
         self.sheet_writer_map = {}
         self.sheet_resource_map = SheetResourceMap(self, self.jinja_env)
-        for index,rdsheet in enumerate(self.rdbook.sheets()):
+        for index, rdsheet in enumerate(self.rdbook.sheets()):
             self.sheet_resource_map.add(rdsheet, rdsheet.name, index)
 
     def build(self, sheet, index, merger):
@@ -74,26 +75,35 @@ class BookWriter(BookBase, BookMixin):
                             cell_node = Cell(sheet_cell, rowx, colx, value, cty)
                     else:
                         font = self.get_font(sheet, rowx, colx)
-                        cell_node = create_cell(sheet_cell, rowx, colx, value, rich_text, cty, font, rich_handler)
+                        cell_node = create_cell(
+                            sheet_cell,
+                            rowx,
+                            colx,
+                            value,
+                            rich_text,
+                            cty,
+                            font,
+                            rich_handler,
+                        )
                 else:
                     cell_node = Cell(sheet_cell, rowx, colx, value, cty)
                 if cell_tag_map:
                     cell_tag = CellTag(cell_tag_map)
                     cell_node.extend_cell_tag(cell_tag)
-                    if colx==0:
+                    if colx == 0:
                         row_node.cell_tag = cell_tag
                 tree.add_child(cell_node)
-        tree.add_child(Node())#
+        tree.add_child(Node())  #
         return tree
 
     def render_sheet(self, payload, left_top=None):
-        if not hasattr(self, 'wtbook') or self.wtbook is None:
+        if not hasattr(self, "wtbook") or self.wtbook is None:
             self.create_workbook()
         return BookMixin.render_sheet(self, payload, left_top)
 
     def save(self, fname):
         if self.wtbook is not None:
-            stream = open(fname, 'wb')
+            stream = open(fname, "wb")
             self.wtbook.save(stream)
             stream.close()
             del self.wtbook

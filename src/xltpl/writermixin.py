@@ -1,6 +1,4 @@
-
 class Box(object):
-
     def __init__(self, top, left):
         self.reset_pos(top, left)
 
@@ -17,8 +15,8 @@ class Box(object):
         self.left = left
         self.right = left
 
-class SheetMixin(object):
 
+class SheetMixin(object):
     def copy_dimensions(self, rdrowx, rdcolx, wtrowx, wtcolx):
         self.copy_row_dimension(rdrowx, wtrowx)
         self.copy_col_dimension(rdcolx, wtcolx)
@@ -27,7 +25,7 @@ class SheetMixin(object):
         if isinstance(top_left, (tuple, list)):
             self.box = Box(top_left[0], top_left[1])
         elif isinstance(top_left, dict):
-            self.box = Box(top_left['top'], top_left['left'])
+            self.box = Box(top_left["top"], top_left["left"])
         else:
             self.box = Box(top_left.top, top_left.left)
 
@@ -40,14 +38,18 @@ class SheetMixin(object):
 
     def write_cell(self, cell_node, rv, cty):
         self.box.next_cell()
-        self.merger.merge_cell(cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right)
-        self.copy_dimensions(cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right)
+        self.merger.merge_cell(
+            cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right
+        )
+        self.copy_dimensions(
+            cell_node.rowx, cell_node.colx, self.box.bottom, self.box.right
+        )
         if cell_node.sheet_cell:
             cell_context = self.get_cell_context(cell_node, rv, cty)
             cell_context.finish()
             target_cell = cell_context.target_cell
-            if target_cell and hasattr(cell_node, 'ops') and cell_node.ops:
-                for (func, func_args) in cell_node.ops:
+            if target_cell and hasattr(cell_node, "ops") and cell_node.ops:
+                for func, func_args in cell_node.ops:
                     func(*func_args, cell_context)
                 cell_node.ops.clear()
 
@@ -58,7 +60,6 @@ class SheetMixin(object):
 
 
 class BookMixin(object):
-
     def load(self, fname):
         pass
 
@@ -87,7 +88,7 @@ class BookMixin(object):
         return sheet_writer
 
     def get_sheet_name(self, payload):
-        sheet_name = payload.get('sheet_name')
+        sheet_name = payload.get("sheet_name")
         if sheet_name:
             return sheet_name
         for i in range(9999):

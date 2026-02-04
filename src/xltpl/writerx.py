@@ -16,8 +16,8 @@ from .config import config
 from .celltag import CellTag
 from .image import img_cache
 
-class SheetWriter(SheetBase, SheetMixin):
 
+class SheetWriter(SheetBase, SheetMixin):
     def __init__(self, bookwriter, sheet_resource, sheet_name):
         self.workbook = bookwriter.workbook
         self.merger = sheet_resource.merger
@@ -44,7 +44,7 @@ class BookWriter(BookBase, BookMixin):
         self.merger_cls = Merger
         self.sheet_writer_map = {}
         self.sheet_resource_map = SheetResourceMap(self, self.jinja_env)
-        for index,rdsheet in enumerate(self.workbook.worksheets):
+        for index, rdsheet in enumerate(self.workbook.worksheets):
             self.sheet_resource_map.add(rdsheet, rdsheet.title, index)
             self.workbook.remove(rdsheet)
 
@@ -65,32 +65,43 @@ class BookWriter(BookBase, BookMixin):
                 if sheet_cell.comment:
                     comment = sheet_cell.comment.text
                     if tag_test(comment):
-                        _,cell_tag_map = parse_cell_tag(comment)
+                        _, cell_tag_map = parse_cell_tag(comment)
                 value = sheet_cell._value
                 data_type = sheet_cell.data_type
-                if data_type == 's':
+                if data_type == "s":
                     rich_text = None
                     if isinstance(value, CellRichText):
-                        #print(value)
+                        # print(value)
                         rich_text = value
                         value = str(rich_text)
                     if not tag_test(value):
                         if rich_text:
-                            cell_node = Cell(sheet_cell, rowx, colx, rich_text, data_type)
+                            cell_node = Cell(
+                                sheet_cell, rowx, colx, rich_text, data_type
+                            )
                         else:
                             cell_node = Cell(sheet_cell, rowx, colx, value, data_type)
                     else:
                         font = self.get_font(sheet_cell._style.fontId)
-                        cell_node = create_cell(sheet_cell, rowx, colx, value, rich_text, data_type, font, rich_handlerx)
+                        cell_node = create_cell(
+                            sheet_cell,
+                            rowx,
+                            colx,
+                            value,
+                            rich_text,
+                            data_type,
+                            font,
+                            rich_handlerx,
+                        )
                 else:
                     cell_node = Cell(sheet_cell, rowx, colx, value, data_type)
                 if cell_tag_map:
                     cell_tag = CellTag(cell_tag_map)
                     cell_node.extend_cell_tag(cell_tag)
-                    if colx==1:
+                    if colx == 1:
                         row_node.cell_tag = cell_tag
                 tree.add_child(cell_node)
-        tree.add_child(Node())#
+        tree.add_child(Node())  #
         return tree
 
     def cleanup_defined_names(self):

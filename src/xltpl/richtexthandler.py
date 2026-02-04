@@ -5,24 +5,24 @@ from copy import copy
 from .utils import fix_test, tag_fix
 from openpyxl.cell.rich_text import CellRichText, TextBlock
 
-class RichTextHandler():
 
+class RichTextHandler:
     def iter(self, rich_text, font):
         text_4_fix = self.text_4_fix(rich_text)
         if fix_test(text_4_fix):
             fixed = tag_fix(text_4_fix)
-            #print(text_4_fix)
-            #print(fixed)
+            # print(text_4_fix)
+            # print(fixed)
             for i, segment in enumerate(rich_text):
                 if i in fixed:
                     text = fixed[i]
-                    if text == '':
+                    if text == "":
                         continue
                     else:
-                        yield text,segment[1],segment
+                        yield text, segment[1], segment
         else:
             for segment in rich_text:
-                yield segment[0],segment[1],segment
+                yield segment[0], segment[1], segment
 
     @classmethod
     def rich_segment(self, text, font):
@@ -36,16 +36,16 @@ class RichTextHandler():
             x = []
             for text, font in value:
                 x.append(text)
-            return ''.join(x)
+            return "".join(x)
 
     @classmethod
     def text_4_fix(self, rich_text):
         text = []
-        fmt = '___%d___'
+        fmt = "___%d___"
         for i, segment in enumerate(rich_text):
             text.append(fmt % i)
             text.append(segment[0])
-        return ''.join(text)
+        return "".join(text)
 
     @classmethod
     def rich_content(cls, value):
@@ -56,7 +56,7 @@ class RichTextHandler():
         if segments:
             return segments
         else:
-            return ''
+            return ""
 
     @classmethod
     def mid(cls, rich_text, head, tail):
@@ -81,7 +81,7 @@ class RichTextHandler():
                 else:
                     text_st = head - st
                     text_end = tail - st
-                    text = segment_text[text_st:text_end + 1]
+                    text = segment_text[text_st : text_end + 1]
                     segments.append((text, font))
                     texts.append(text)
                     break
@@ -91,29 +91,30 @@ class RichTextHandler():
                 texts.append(text)
             else:
                 text_end = tail - st
-                text = segment_text[:text_end + 1]
+                text = segment_text[: text_end + 1]
                 segments.append((text, font))
                 texts.append(text)
                 break
-        return segments, ''.join(texts)
+        return segments, "".join(texts)
 
-class RichTextHandlerX():
 
+class RichTextHandlerX:
     @classmethod
     def iter(self, rich_text, font):
         def get_segment_font(segment):
             if isinstance(segment, TextBlock):
                 return segment.font or font
             return font
+
         text_4_fix = self.text_4_fix(rich_text)
         if fix_test(text_4_fix):
             fixed = tag_fix(text_4_fix)
-            #print(text_4_fix)
-            #print(fixed)
+            # print(text_4_fix)
+            # print(fixed)
             for i, segment in enumerate(rich_text):
                 if i in fixed:
                     text = fixed[i]
-                    if text == '':
+                    if text == "":
                         continue
                     else:
                         segment_font = get_segment_font(segment)
@@ -134,11 +135,11 @@ class RichTextHandlerX():
     @classmethod
     def text_4_fix(self, rich_text):
         text = []
-        fmt = '___%d___'
-        for i,segment in enumerate(rich_text):
+        fmt = "___%d___"
+        for i, segment in enumerate(rich_text):
             text.append(fmt % i)
             text.append(str(segment))
-        return ''.join(text)
+        return "".join(text)
 
     @classmethod
     def rich_content(cls, value):
@@ -175,7 +176,7 @@ class RichTextHandlerX():
                 else:
                     text_st = head - st
                     text_end = tail - st
-                    text = segment_text[text_st:text_end+1]
+                    text = segment_text[text_st : text_end + 1]
                     segment_copy = get_segment_copy(segment)
                     segments.append(segment_copy)
                     texts.append(text)
@@ -183,17 +184,17 @@ class RichTextHandlerX():
             elif end < tail:
                 segment_copy = copy(segment)
                 text = segment.text
-                #segment_copy.text = text
+                # segment_copy.text = text
                 segments.append(segment_copy)
                 texts.append(text)
             else:
                 text_end = tail - st
-                text = segment_text[:text_end + 1]
+                text = segment_text[: text_end + 1]
                 segment_copy = get_segment_copy(segment, text)
                 segments.append(segment_copy)
                 texts.append(text)
                 break
-        return CellRichText(segments), ''.join(texts)
+        return CellRichText(segments), "".join(texts)
 
 
 rich_handlerx = RichTextHandlerX()

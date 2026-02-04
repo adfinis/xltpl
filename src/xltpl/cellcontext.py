@@ -3,7 +3,9 @@ import xlrd
 import xlwt
 from openpyxl.utils.datetime import to_excel
 from openpyxl.cell.cell import NUMERIC_TYPES, TIME_TYPES, STRING_TYPES
+
 BOOL_TYPE = bool
+
 
 def get_type(value):
     if isinstance(value, NUMERIC_TYPES):
@@ -19,8 +21,8 @@ def get_type(value):
         return str(value), xlrd.XL_CELL_TEXT
     return value, dt
 
-class Base(object):
 
+class Base(object):
     def __init__(self, sheet_writer, cell_node, value, data_type):
         self.sheet_writer = sheet_writer
         self.cell_node = cell_node
@@ -60,15 +62,14 @@ class Base(object):
         return self.sheet_writer.box.bottom
 
     def apply_filters(self):
-        if hasattr(self.cell_node, 'filters') and self.cell_node.filters:
-            for (filter, args) in self.cell_node.filters:
-                #print('args', args)
+        if hasattr(self.cell_node, "filters") and self.cell_node.filters:
+            for filter, args in self.cell_node.filters:
+                # print('args', args)
                 filter(self, *args)
             self.cell_node.filters.clear()
 
 
 class CellContextX(Base):
-
     def __init__(self, sheet_writer, cell_node, value, data_type):
         super().__init__(sheet_writer, cell_node, value, data_type)
         self._target_cell = None
@@ -86,7 +87,7 @@ class CellContextX(Base):
         if value is None:
             target._value = source._value
             target.data_type = source.data_type
-        elif isinstance(value, (str, bytes)) and value.startswith('='):
+        elif isinstance(value, (str, bytes)) and value.startswith("="):
             target.value = value
         elif data_type:
             target._value = value
@@ -107,9 +108,7 @@ class CellContextX(Base):
         self.apply_filters()
 
 
-
 class CellContext(Base):
-
     def __init__(self, sheet_writer, cell_node, value, data_type):
         super().__init__(sheet_writer, cell_node, value, data_type)
         self._style = None
@@ -147,7 +146,7 @@ class CellContext(Base):
         if cty == xlrd.XL_CELL_TEXT:
             if isinstance(value, (list, tuple)):
                 wtrow.set_cell_rich_text(wtcolx, value, style)
-            elif value.startswith('='):
+            elif value.startswith("="):
                 try:
                     formula = xlwt.Formula(value[1:])
                     wtrow.set_cell_formula(wtcolx, formula, style)
@@ -165,9 +164,10 @@ class CellContext(Base):
             wtrow.set_cell_error(wtcolx, value, style)
         else:
             raise Exception(
-                "Unknown xlrd cell type %r with value %r at (sheet=%r,rowx=%r,colx=%r)" \
+                "Unknown xlrd cell type %r with value %r at (sheet=%r,rowx=%r,colx=%r)"
                 % (cty, value, self.rdsheet.name, rdrowx, rdcolx)
             )
+
     def finish(self):
         self.apply_filters()
         self.set_cell()

@@ -6,14 +6,13 @@ from .merger import MergeMixin
 from .image import Img
 
 
-class MergerMixin():
-
+class MergerMixin:
     @property
     def to_merge(self):
         return bool(self._merge_list)
 
-class CellMerge(MergeMixin):
 
+class CellMerge(MergeMixin):
     def __init__(self, cell_range, merger):
         self.merger = merger
         self.set_range()
@@ -23,13 +22,18 @@ class CellMerge(MergeMixin):
         self._last_col = cell_range.max_col
 
     def new_range(self):
-        if self.start_wtrowx==self.end_wtrowx and self.start_wtcolx==self.end_wtcolx:
+        if (
+            self.start_wtrowx == self.end_wtrowx
+            and self.start_wtcolx == self.end_wtcolx
+        ):
             return
-        range = CellRange(None, self.start_wtcolx, self.start_wtrowx, self.end_wtcolx, self.end_wtrowx)
+        range = CellRange(
+            None, self.start_wtcolx, self.start_wtrowx, self.end_wtcolx, self.end_wtrowx
+        )
         self.merger.add_new_range(range)
 
-class CellMerger(MergerMixin):
 
+class CellMerger(MergerMixin):
     def __init__(self, sheet):
         self.range_list = []
         self._merge_list = []
@@ -56,8 +60,8 @@ class CellMerger(MergerMixin):
             wtsheet.merged_cells.add(range)
         self.range_list.clear()
 
-class DataValidation(MergeMixin):
 
+class DataValidation(MergeMixin):
     def __init__(self, cell_range, merger, dv_key):
         self.dv_key = dv_key
         self.merger = merger
@@ -68,13 +72,15 @@ class DataValidation(MergeMixin):
         self._last_col = cell_range.max_col
 
     def new_range(self):
-        if self.start_wtrowx==-1:
+        if self.start_wtrowx == -1:
             return
-        range = CellRange(None, self.start_wtcolx, self.start_wtrowx, self.end_wtcolx, self.end_wtrowx)
+        range = CellRange(
+            None, self.start_wtcolx, self.start_wtrowx, self.end_wtcolx, self.end_wtrowx
+        )
         self.merger.add_new_range(self.dv_key, range)
 
-class DvMerger(MergerMixin):
 
+class DvMerger(MergerMixin):
     def __init__(self, sheet):
         self.dv_map = {}
         self.dv_copy_map = {}
@@ -82,7 +88,7 @@ class DvMerger(MergerMixin):
         self.get_merge_list(sheet)
 
     def get_merge_list(self, rdsheet):
-        for index,dv in enumerate(rdsheet.data_validations.dataValidation):
+        for index, dv in enumerate(rdsheet.data_validations.dataValidation):
             self.dv_map[index] = dv
             for crange in dv.ranges:
                 _merge = DataValidation(crange, self, index)
@@ -109,9 +115,11 @@ class DvMerger(MergerMixin):
             wtsheet.data_validations.append(dv)
         self.dv_copy_map.clear()
 
-from collections import defaultdict
-class ImageMerge(MergeMixin):
 
+from collections import defaultdict
+
+
+class ImageMerge(MergeMixin):
     def __init__(self, image, merger, image_count_dict):
         self.merger = merger
         self.image = image
@@ -130,7 +138,7 @@ class ImageMerge(MergeMixin):
         self.image_key = (rlo, clo, count)
 
     def new_range(self):
-        if self.start_wtrowx==-1:
+        if self.start_wtrowx == -1:
             return
         image = Img(self.image)
         _from = image.anchor._from
@@ -148,7 +156,7 @@ class ImageMerge(MergeMixin):
     def collect_range(self):
         self.new_range()
         self.set_range()
-        for key,image in self.image_copy_map.items():
+        for key, image in self.image_copy_map.items():
             ref = self.image_ref_map.get(key)
             if ref:
                 image.set_ref(ref)
@@ -156,8 +164,8 @@ class ImageMerge(MergeMixin):
         self.image_copy_map.clear()
         self.image_ref_map.clear()
 
-class ImageMerger(MergerMixin):
 
+class ImageMerger(MergerMixin):
     def __init__(self, sheet):
         self.images = []
         self._merge_map = {}
@@ -169,7 +177,7 @@ class ImageMerger(MergerMixin):
     def get_merge_list(self, rdsheet):
         image_count_dict = defaultdict(int)
         for image in rdsheet._images:
-            #print(image.ref, id(image.ref))
+            # print(image.ref, id(image.ref))
             _merge = ImageMerge(image, self, image_count_dict)
             self._merge_map[_merge.image_key] = _merge
             self._merge_list.append(_merge)
@@ -195,8 +203,8 @@ class ImageMerger(MergerMixin):
         wtsheet._images = self.images
         self.images = []
 
-class AutoFilter(MergeMixin):
 
+class AutoFilter(MergeMixin):
     def __init__(self, rdsheet):
         if not rdsheet.auto_filter.ref:
             self.to_merge = False
@@ -212,11 +220,16 @@ class AutoFilter(MergeMixin):
         self.first_af = None
 
     def new_range(self):
-        if self.start_wtrowx==-1:
+        if self.start_wtrowx == -1:
             return
         if not self.first_af:
-            self.first_af = CellRange(None, self.start_wtcolx, self.start_wtrowx,
-                                      self.end_wtcolx, self.end_wtrowx)
+            self.first_af = CellRange(
+                None,
+                self.start_wtcolx,
+                self.start_wtrowx,
+                self.end_wtcolx,
+                self.end_wtrowx,
+            )
 
     def collect_range(self, wtsheet):
         self.new_range()
@@ -229,15 +242,16 @@ class AutoFilter(MergeMixin):
             wtsheet.auto_filter.ref = self.first_af.coord
             self.first_af = None
 
+
 class DefinedName(MergeMixin):
     pass
+
 
 class DefinedNames(MergerMixin):
     pass
 
 
 class Merger:
-
     def __init__(self, rdsheet):
         cell_merger = CellMerger(rdsheet)
         dv_merger = DvMerger(rdsheet)
@@ -259,4 +273,3 @@ class Merger:
 
     def set_image_ref(self, image_ref):
         self.image_merger.set_image_ref(image_ref)
-

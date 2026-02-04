@@ -13,42 +13,40 @@ def write_test(writer_cls, tpl_fname, result_fname):
     now = datetime.now()
     items = get_items()
 
-    person = {'address': u'No Where', 'name': u'No Name',
-               'fm': 333, 'date': now}
-    person['rows'] = items
-    person['items'] = items
-    person['sheet_name'] = 'box'
+    person = {"address": "No Where", "name": "No Name", "fm": 333, "date": now}
+    person["rows"] = items
+    person["items"] = items
+    person["sheet_name"] = "box"
     top_left = None
     for i in range(3):
-        person['tpl_name'] = 'top'
+        person["tpl_name"] = "top"
         top_box = writer.render_sheet(person, top_left)
 
-        person['tpl_name'] = 'left'
+        person["tpl_name"] = "left"
         left_box = writer.render_sheet(person, (top_box.bottom, top_box.left))
 
-        person['tpl_name'] = 'list1'
+        person["tpl_name"] = "list1"
         middle_box = writer.render_sheet(person, (left_box.top, left_box.right))
 
-        person['tpl_name'] = 'right'
+        person["tpl_name"] = "right"
         right_box = writer.render_sheet(person, (middle_box.top, middle_box.right))
 
         _left = top_box.left
         _top = max(left_box.bottom, middle_box.bottom, right_box.bottom)
         top_left = (_top, _left)
 
-
     fname = os.path.join(pth, result_fname)
     writer.save(fname)
 
 
-class Item():
-
+class Item:
     def __init__(self, name, category, price, count):
         self.name = name
-        self.category =category
+        self.category = category
         self.price = price
         self.count = count
         self.date = datetime.now()
+
 
 def get_items():
     items = []
@@ -66,12 +64,12 @@ def get_items():
 
 
 if __name__ == "__main__":
-    tpl_name = 'box.xls'
-    result_fname = 'box_result.xls'
+    tpl_name = "box.xls"
+    result_fname = "box_result.xls"
     writer_cls = BookWriter
     write_test(writer_cls, tpl_name, result_fname)
 
-    tpl_name = 'box.xlsx'
-    result_fname = 'box_result.xlsx'
+    tpl_name = "box.xlsx"
+    result_fname = "box_result.xlsx"
     writer_cls = BookWriterx
     write_test(writer_cls, tpl_name, result_fname)

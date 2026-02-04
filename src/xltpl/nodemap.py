@@ -1,10 +1,7 @@
-
-
-class NodeMap():
-
+class NodeMap:
     def __init__(self):
         self.current_node = None
-        self.current_key = ''
+        self.current_key = ""
         self.last_node = None
         self.last_key = None
         self.node_map = {}
@@ -66,5 +63,3 @@ class NodeMap():
 
     def get_tag_node(self, key):
         return self.node_map.get(key)
-
-

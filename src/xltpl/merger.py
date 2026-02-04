@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-class MergeMixin():
 
+class MergeMixin:
     def set_range(self, rdrowx=-1, rdcolx=-1, wtrowx=-1, wtcolx=-1):
         self.start_rdrowx = rdrowx
         self.start_rdcolx = rdcolx
@@ -11,8 +11,10 @@ class MergeMixin():
         self.end_wtcolx = wtcolx
 
     def is_in_range(self, rdrowx, rdcolx):
-        return self._first_row <= rdrowx <= self._last_row and \
-               self._first_col <= rdcolx <= self._last_col
+        return (
+            self._first_row <= rdrowx <= self._last_row
+            and self._first_col <= rdcolx <= self._last_col
+        )
 
     def to_be_merged(self, rdrowx, rdcolx):
         if rdrowx > self.start_rdrowx:
@@ -40,8 +42,8 @@ class MergeMixin():
         self.new_range()
         self.set_range()
 
-class CellMerge(MergeMixin):
 
+class CellMerge(MergeMixin):
     def __init__(self, cell_range, merger):
         self.merger = merger
         self.set_range()
@@ -52,13 +54,16 @@ class CellMerge(MergeMixin):
         self._last_col = chi - 1
 
     def new_range(self):
-        if self.start_wtrowx==self.end_wtrowx and self.start_wtcolx==self.end_wtcolx:
+        if (
+            self.start_wtrowx == self.end_wtrowx
+            and self.start_wtcolx == self.end_wtcolx
+        ):
             return
         range = (self.start_wtrowx, self.end_wtrowx, self.start_wtcolx, self.end_wtcolx)
         self.merger.add_new_range(range)
 
-class Merger:
 
+class Merger:
     def __init__(self, sheet):
         self.range_list = []
         self._merge_list = []

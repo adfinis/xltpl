@@ -5,8 +5,8 @@ from openpyxl.utils import get_column_letter
 from openpyxl.cell.text import InlineFont
 from .cellcontext import CellContextX
 
-class SheetBase():
 
+class SheetBase:
     def copy_sheet_settings(self):
         self.wtsheet.sheet_format = copy.copy(self.rdsheet.sheet_format)
         self.wtsheet.sheet_properties = copy.copy(self.rdsheet.sheet_properties)
@@ -51,29 +51,33 @@ class SheetBase():
         self.wtsheet.column_dimensions[wtkey].worksheet = self.wtsheet
         self.wtcols.add(wtcolx)
 
-    def _cell(self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None):
+    def _cell(
+        self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None
+    ):
         target_cell = self.wtsheet.cell(column=wtcolx, row=wtrowx)
         if value is None:
             target_cell.value = source_cell._value
             target_cell.data_type = source_cell.data_type
-        elif isinstance(value, STRING_TYPES) and value.startswith('='):
+        elif isinstance(value, STRING_TYPES) and value.startswith("="):
             target_cell.value = value
         elif data_type:
             target_cell._value = value
             target_cell.data_type = data_type
         else:
-            #value, data_type = get_type(value)
+            # value, data_type = get_type(value)
             target_cell.value = value
-            #target_cell.data_type = data_type
+            # target_cell.data_type = data_type
         if source_cell.has_style:
             target_cell._style = copy.copy(source_cell._style)
         if source_cell.hyperlink:
             target_cell._hyperlink = copy.copy(source_cell.hyperlink)
-        #if source_cell.comment:
+        # if source_cell.comment:
         #    target_cell.comment = copy.copy(source_cell.comment)
         return target_cell
 
-    def cell(self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None):
+    def cell(
+        self, source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value=None, data_type=None
+    ):
         self.copy_row_dimension(rdrowx, wtrowx)
         self.copy_col_dimension(rdcolx, wtcolx)
         return self._cell(source_cell, rdrowx, rdcolx, wtrowx, wtcolx, value, data_type)
@@ -82,8 +86,7 @@ class SheetBase():
         return CellContextX(self, cell_node, rv, cty)
 
 
-class BookBase():
-
+class BookBase:
     def get_font(self, fontId):
         ifont = self.font_map.get(fontId)
         if ifont:

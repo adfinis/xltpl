@@ -2,18 +2,18 @@ import re
 from jinja2.lexer import Lexer
 from jinja2.environment import Environment
 
-BLOCK_START_STRING = '{%'
-BLOCK_END_STRING = '%}'
-BLOCKSPLIT = '(%s.*?%s)' % (BLOCK_START_STRING, BLOCK_END_STRING)
+BLOCK_START_STRING = "{%"
+BLOCK_END_STRING = "%}"
+BLOCKSPLIT = "(%s.*?%s)" % (BLOCK_START_STRING, BLOCK_END_STRING)
 block_split_pattern = re.compile(BLOCKSPLIT)
 
-class CellTag():
 
+class CellTag:
     def __init__(self, cell_tag=dict()):
-        self.beforerow = ''
-        self.beforecell = ''
-        self.aftercell = ''
-        self.extracell = ''
+        self.beforerow = ""
+        self.beforecell = ""
+        self.aftercell = ""
+        self.extracell = ""
         if cell_tag:
             self.__dict__.update(cell_tag)
 
@@ -25,8 +25,7 @@ class CellTag():
             self.extracell += other.extracell
 
 
-class TagParser():
-
+class TagParser:
     def __init__(self):
         env = Environment()
         self.lexer = Lexer(env)
@@ -37,29 +36,32 @@ class TagParser():
         tag = next(tokens)
         ignored = False
         beforerow = False
-        if tag.value in ['yn', 'img', 'xv', 'op']:
+        if tag.value in ["yn", "img", "xv", "op"]:
             ignored = True
-        if begin.value[-1] == '-':
+        if begin.value[-1] == "-":
             beforerow = True
-        return ignored,beforerow
+        return ignored, beforerow
 
     def parse_tag(self, text):
         tokens = self.lexer.tokenize(text)
         begin = next(tokens)
         return next(tokens).value
 
+
 tag_parser = TagParser()
+
+
 def find_cell_tag(text):
     parts = block_split_pattern.split(text)
-    #print(parts)
-    _beforerow = ''
-    _beforecell = ''
-    _aftercell = ''
+    # print(parts)
+    _beforerow = ""
+    _beforecell = ""
+    _aftercell = ""
     stop = True
     index = 0
     for part in parts:
         if index % 2 == 0:
-            if part == '':
+            if part == "":
                 index += 1
                 continue
             break
@@ -76,7 +78,7 @@ def find_cell_tag(text):
     if not stop:
         for part in parts[index:]:
             if index % 2 == 0:
-                if part == '':
+                if part == "":
                     index += 1
                     continue
                 break
@@ -90,7 +92,7 @@ def find_cell_tag(text):
     index = 0
     for part in _reversed:
         if index % 2 == 0:
-            if part == '':
+            if part == "":
                 index += 1
                 continue
             break
@@ -101,17 +103,17 @@ def find_cell_tag(text):
             _aftercell = part + _aftercell
             index += 1
     if _beforerow or _beforecell or _aftercell:
-        head = len(_beforerow ) + len(_beforecell)
+        head = len(_beforerow) + len(_beforecell)
         tail = len(_aftercell)
         cell_tag = CellTag()
         cell_tag.beforerow = _beforerow
         cell_tag.beforecell = _beforecell
         cell_tag.aftercell = _aftercell
-        if(tail==0):
+        if tail == 0:
             s = text[head:]
         else:
             s = text[head:-tail]
-        #print(s, cell_tag, head, tail)
+        # print(s, cell_tag, head, tail)
         return s, cell_tag, head, tail
     else:
         return text, None, 0, 0

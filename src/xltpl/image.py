@@ -1,9 +1,9 @@
 from copy import deepcopy
 from openpyxl.drawing.image import Image
 
-# to avoid file closed error
-class Cache():
 
+# to avoid file closed error
+class Cache:
     def __init__(self):
         self.map = {}
 
@@ -20,8 +20,8 @@ class Cache():
 img_cache = Cache()
 data_cache = Cache()
 
-class Img(Image):
 
+class Img(Image):
     def __init__(self, image):
         self.copy_ref(image)
 
@@ -57,7 +57,3 @@ class Img(Image):
     @property
     def key(self):
         return id(self.ref)
-
-
-
-

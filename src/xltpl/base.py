@@ -4,25 +4,31 @@ import xlrd
 import xlwt
 from .cellcontext import CellContext
 
-# adapted from xlutils.filter
-class SheetBase():
 
+# adapted from xlutils.filter
+class SheetBase:
     def create_worksheet(self, rdsheet, wtsheet_name):
         # these checks should really be done by xlwt!
         if not wtsheet_name:
-            raise ValueError('Empty sheet name will result in invalid Excel file!')
+            raise ValueError("Empty sheet name will result in invalid Excel file!")
         l_wtsheet_name = wtsheet_name.lower()
         if l_wtsheet_name in self.wtbook.wtsheet_names:
-            raise ValueError('A sheet named %r has already been added!' % l_wtsheet_name)
+            raise ValueError(
+                "A sheet named %r has already been added!" % l_wtsheet_name
+            )
         self.wtbook.wtsheet_names.add(l_wtsheet_name)
         l_wtsheet_name = len(wtsheet_name)
         if len(wtsheet_name) > 31:
-            raise ValueError('Sheet name cannot be more than 31 characters long, '
-                             'supplied name was %i characters long!' % l_wtsheet_name)
+            raise ValueError(
+                "Sheet name cannot be more than 31 characters long, "
+                "supplied name was %i characters long!" % l_wtsheet_name
+            )
 
         self.rdsheet = rdsheet
         self.wtsheet_name = wtsheet_name
-        self.wtsheet = wtsheet = self.wtbook.add_sheet(wtsheet_name, cell_overwrite_ok=True)
+        self.wtsheet = wtsheet = self.wtbook.add_sheet(
+            wtsheet_name, cell_overwrite_ok=True
+        )
         wtsheet.mc_ranges = {}
 
         # default column width: STANDARDWIDTH, DEFCOLWIDTH
@@ -33,8 +39,7 @@ class SheetBase():
             # character-width; we lose precision by rounding to
             # the higher whole number of characters.
             #### XXXX TODO: implement STANDARDWIDTH record in xlwt.
-            wtsheet.col_default_width = \
-                (rdsheet.standardwidth + 255) // 256
+            wtsheet.col_default_width = (rdsheet.standardwidth + 255) // 256
         elif rdsheet.defcolwidth is not None:
             wtsheet.col_default_width = rdsheet.defcolwidth
         #
@@ -92,7 +97,7 @@ class SheetBase():
             wtsheet.vert_split_first_visible = rdsheet.vert_split_first_visible
 
         # print settings
-        if hasattr(rdsheet, 'print_headers'):
+        if hasattr(rdsheet, "print_headers"):
             wtsheet.print_headers = rdsheet.print_headers
             wtsheet.print_grid = rdsheet.print_grid
             wtsheet.vert_page_breaks = rdsheet.vertical_page_breaks
@@ -169,7 +174,7 @@ class SheetBase():
             value = source_cell.value
             cty = source_cell.ctype
         if cty is None:
-            value,cty = get_type(value)
+            value, cty = get_type(value)
 
         if cty == xlrd.XL_CELL_EMPTY:
             return
@@ -182,7 +187,7 @@ class SheetBase():
         if cty == xlrd.XL_CELL_TEXT:
             if isinstance(value, (list, tuple)):
                 wtrow.set_cell_rich_text(wtcolx, value, style)
-            elif(value.startswith('=')):
+            elif value.startswith("="):
                 try:
                     formula = xlwt.Formula(value[1:])
                     wtrow.set_cell_formula(wtcolx, formula, style)
@@ -200,7 +205,7 @@ class SheetBase():
             wtrow.set_cell_error(wtcolx, value, style)
         else:
             raise Exception(
-                "Unknown xlrd cell type %r with value %r at (sheet=%r,rowx=%r,colx=%r)" \
+                "Unknown xlrd cell type %r with value %r at (sheet=%r,rowx=%r,colx=%r)"
                 % (cty, value, self.rdsheet.name, rdrowx, rdcolx)
             )
 
@@ -213,8 +218,7 @@ class SheetBase():
         return CellContext(self, cell_node, rv, cty)
 
 
-class BookBase():
-
+class BookBase:
     def load_rdbook(self, fname):
         self.rdbook = rdbook = xlrd.open_workbook(fname, formatting_info=True)
         self.style_list = []
@@ -236,7 +240,9 @@ class BookBase():
             wtf.outline = rdf.outline
             wtf.shadow = rdf.outline
             wtf.colour_index = rdf.colour_index
-            wtf.bold = rdf.bold  #### This attribute is redundant, should be driven by weight
+            wtf.bold = (
+                rdf.bold
+            )  #### This attribute is redundant, should be driven by weight
             wtf._weight = rdf.weight  #### Why "private"?
             wtf.escapement = rdf.escapement
             wtf.underline = rdf.underline_type  ####
@@ -294,7 +300,6 @@ class BookBase():
             #
             self.style_list.append(wtxf)
 
-
     def create_workbook(self):
         self.wtbook = xlwt.Workbook(style_compression=2)
         self.wtbook.dates_1904 = self.rdbook.datemode
@@ -347,7 +352,7 @@ class BookBase():
         runlist = sheet.rich_text_runlist_map.get((rowx, colx))
         if runlist:
             rich_text = []
-            for idx,(start,font_idx) in enumerate(runlist):
+            for idx, (start, font_idx) in enumerate(runlist):
                 end = None
                 if idx != len(runlist) - 1:
                     end = runlist[idx + 1][0]
@@ -355,7 +360,7 @@ class BookBase():
                 font = self._get_font(font_idx)
                 rich_text.append((text, font))
             if runlist[0][0] != 0:
-                text = cell_value[:runlist[0][0]]
+                text = cell_value[: runlist[0][0]]
                 xf = self.rdbook.xf_list[sheet.cell_xf_index(rowx, colx)]
                 font = self._get_font(xf.font_index)
                 rich_text.insert(0, (text, font))
