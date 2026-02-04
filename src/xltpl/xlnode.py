@@ -1,4 +1,3 @@
-import six
 from openpyxl.utils import get_column_letter
 
 from .celltag import block_split_pattern, find_cell_tag, tag_parser
@@ -225,7 +224,7 @@ class Section(Node):
         self._parent.process_child_rv(rv)
 
     def process_child_rv(self, rv):
-        if not isinstance(rv, six.text_type):
+        if not isinstance(rv, str):
             self.richs.append(len(self.child_rvs))
         self.child_rvs.append(rv)
 
@@ -303,7 +302,7 @@ class TagCell(Section, Cell):
 
     def exit(self):
         rv = self.pack()
-        if not isinstance(rv, six.text_type):
+        if not isinstance(rv, str):
             rv = self.rich_handler.rich_content(rv)
         self.write(rv, self.cty)
 

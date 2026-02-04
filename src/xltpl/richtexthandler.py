@@ -1,6 +1,5 @@
 from copy import copy
 
-import six
 from openpyxl.cell.rich_text import CellRichText, TextBlock
 
 from .utils import fix_test, tag_fix
@@ -30,7 +29,7 @@ class RichTextHandler:
 
     @classmethod
     def text_content(cls, value):
-        if isinstance(value, six.text_type):
+        if isinstance(value, str):
             return value
         if isinstance(value, list):
             x = []

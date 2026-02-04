@@ -1,5 +1,3 @@
-import six
-
 from .base import BookBase, SheetBase
 from .celltag import CellTag
 from .config import config
@@ -65,7 +63,7 @@ class BookWriter(BookBase, BookMixin):
                 value = sheet_cell.value
                 cty = sheet_cell.ctype
                 rich_text = self.get_rich_text(sheet, rowx, colx)
-                if isinstance(value, six.text_type):
+                if isinstance(value, str):
                     if not tag_test(value):
                         if rich_text:
                             cell_node = Cell(sheet_cell, rowx, colx, rich_text, cty)

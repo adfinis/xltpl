@@ -1,7 +1,6 @@
 import os
 from inspect import isfunction
 
-import six
 from jinja2 import nodes
 from jinja2.ext import Extension
 from jinja2.runtime import Undefined
@@ -61,12 +60,12 @@ class XvExtension(Extension):
 
     def _xv(self, xv, key, caller):
         if key == 0:
-            return six.text_type(xv)
+            return str(xv)
         xvcell = self.environment.node_map.get_node(key)
         if xv is None or type(xv) is Undefined:
             xv = ""
         xvcell.rv = xv
-        return six.text_type(xv)
+        return str(xv)
 
 
 class OpExtension(Extension):
@@ -88,7 +87,7 @@ class OpExtension(Extension):
         if isfunction(func):
             node = self.environment.node_map.current_node
             node.add_op((func, func_args))
-        return six.text_type(func)
+        return str(func)
 
 
 class NoopExtension(Extension):
@@ -107,7 +106,7 @@ class NoopExtension(Extension):
         )
 
     def _op(self, func, func_args, caller):
-        return six.text_type(func)
+        return str(func)
 
 
 class ImageExtension(Extension):
@@ -148,7 +147,7 @@ class ImageRef:
         self.wtrowx = -1
         self.wtcolx = -1
         if not isinstance(image, ImageFile):
-            fname = six.text_type(image)
+            fname = str(image)
             if not os.path.exists(fname):
                 self.image = None
 
