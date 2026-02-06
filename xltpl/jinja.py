@@ -1,6 +1,6 @@
 import sys,re
-from jinja2 import Environment
 from jinja2.exceptions import TemplateSyntaxError
+from jinja2.sandbox import SandboxedEnvironment as Environment
 from .xlext import NodeExtension, SegmentExtension, XvExtension, \
     ImageExtension, ImagexExtension, OpExtension, NoopExtension
 from .ynext import YnExtension, YnxExtension
